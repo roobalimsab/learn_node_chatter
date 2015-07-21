@@ -1,0 +1,7 @@
+input[type="text"] {
+    width: 300px;
+}
+
+#chatMessages {
+    color: FF0000;
+}

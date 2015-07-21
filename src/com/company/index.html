@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" href="chatter.css" type="text/css">
+</head>
+<body>
+
+<h1>Chatter</h1>
+
+<ul id="chatters">
+</ul>
+
+<p id="chatMessages">
+</p>
+
+<form id="chatForm">
+    <input id="chatInput" type = text />
+    <button type="button">Send</button>
+</form>
+
+
+<script type="text/javascript">
+    var socket = io.connect('http://localhost:8080');
+    socket.on('connect', function() {
+        $('#chatMessages').append('Connected to Chattr' + '<br/>');
+        nickname = prompt("What is your nick name?");
+        socket.emit('join', nickname);
+    });
+
+    socket.on("add chatter", function(name) {
+        var chatter = $('<li id='+name+'>'+name+'</li>');
+        $('#chatters').append(chatter);
+    });
+
+    $('#chatForm').submit(function(e) {
+        e.preventDefault();
+        var message = $('#chatInput').val();
+        $("#chatForm")[0].reset();
+        socket.emit('messages', message);
+
+    });
+
+    socket.on('messages', function(data) {
+        $('#chatMessages').append(data + '<br/>');
+    });
+
+    socket.on('remove chatter', function(name) {
+        $('#chatters li[id=' + name + ']').remove();
+    });
+
+</script>
+</body>
+</html>
